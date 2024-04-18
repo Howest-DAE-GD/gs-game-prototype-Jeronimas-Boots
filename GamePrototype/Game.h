@@ -1,5 +1,7 @@
 #pragma once
 #include "BaseGame.h"
+#include <vector>
+#include "Player.h"
 class Game : public BaseGame
 {
 public:
@@ -27,4 +29,11 @@ private:
 	void Initialize();
 	void Cleanup( );
 	void ClearBackground( ) const;
+
+	Player* m_Player;
+	std::vector<bool> m_Void;
+
+	float m_Timer{};
+	int cols{ 18 };
+	int rows{ 10 };
 };

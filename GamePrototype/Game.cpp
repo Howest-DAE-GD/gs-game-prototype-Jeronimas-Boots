@@ -1,5 +1,7 @@
 #include "pch.h"
+#include "utils.h"
 #include "Game.h"
+#include <iostream>
 
 Game::Game( const Window& window ) 
 	:BaseGame{ window }
@@ -14,6 +16,12 @@ Game::~Game( )
 
 void Game::Initialize( )
 {
+	m_Player = new Player(Point2f(GetViewPort().width / 2, GetViewPort().height / 2));
+	int gridSize{ rows * cols};
+	for (int i = 0; i < gridSize; i++)
+	{
+		m_Void.push_back(false);
+	}
 	
 }
 
@@ -23,6 +31,13 @@ void Game::Cleanup( )
 
 void Game::Update( float elapsedSec )
 {
+	m_Timer += elapsedSec;
+
+	if (m_Timer >= 5)
+	{
+		m_Timer = 0;
+		m_Void[rand() % m_Void.size()] = true;
+	}
 	// Check keyboard state
 	//const Uint8 *pStates = SDL_GetKeyboardState( nullptr );
 	//if ( pStates[SDL_SCANCODE_RIGHT] )
@@ -38,6 +53,33 @@ void Game::Update( float elapsedSec )
 void Game::Draw( ) const
 {
 	ClearBackground( );
+
+	Rectf grid{ };
+	float distanceFromBorder{ 100.f };
+	float cellWidth = GetViewPort().width / cols - distanceFromBorder / cols;
+	float cellHeight = GetViewPort().height / rows - distanceFromBorder / rows;
+	grid.height = cellHeight;
+	grid.width = cellWidth;
+	for (int idx{ }; idx < cols * rows; ++idx)
+	{
+		if (idx == 81 || idx == 82 || idx == 81 + cols || idx == 82 + cols)
+		{
+			utils::SetColor(Color4f(0.f, 1.f, 1.f, 1.f));
+			utils::FillRect(grid);
+		}
+		grid.left = GetViewPort().width / 2 - cellWidth * cols / 2 + (idx % cols)*cellWidth;
+		grid.bottom = GetViewPort().height / 2 - cellHeight * rows / 2 + (idx / cols)*cellHeight;
+
+		utils::SetColor(Color4f(0.f, 0.f, 1.f, 1.f));
+		utils::DrawRect(grid);
+		if (m_Void[idx])
+		{
+			utils::SetColor(Color4f(0.f, 0.f, 1.f, 1.f));
+			utils::FillRect(grid);
+		}
+		
+	}
+	m_Player->Draw(cellWidth);
 }
 
 void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )
@@ -105,6 +147,8 @@ void Game::ProcessMouseUpEvent( const SDL_MouseButtonEvent& e )
 
 void Game::ClearBackground( ) const
 {
-	glClearColor( 0.0f, 0.0f, 0.3f, 1.0f );
+	glClearColor( 0.0f, 0.0f, 0.f, 1.0f );
 	glClear( GL_COLOR_BUFFER_BIT );
 }
+
+
