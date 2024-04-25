@@ -2,6 +2,8 @@
 #include "BaseGame.h"
 #include <vector>
 #include "Player.h"
+#include "Texture.h"
+#include "Objects.h"
 class Game : public BaseGame
 {
 public:
@@ -29,11 +31,18 @@ private:
 	void Initialize();
 	void Cleanup( );
 	void ClearBackground( ) const;
-
-	Player* m_Player;
+	
+	Player* m_pPlayer;
 	std::vector<bool> m_Void;
+	Texture* m_ScoreTxt;
+	Objects* m_Object;
 
 	float m_Timer{};
-	int cols{ 18 };
-	int rows{ 10 };
+	int m_Cols{ 18 };
+	int m_Rows{ 10 };
+	bool m_UpKeyDown{ false };
+	bool m_DownKey{ false };
+	bool m_RighKey{ false };
+	bool m_LeftKey{ false };
+	std::string m_Score{ std::to_string(m_Timer) };
 };
