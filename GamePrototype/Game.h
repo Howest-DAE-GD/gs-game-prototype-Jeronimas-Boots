@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Texture.h"
 #include "Objects.h"
+#include "utils.h"
 class Game : public BaseGame
 {
 public:
@@ -36,13 +37,24 @@ private:
 	std::vector<bool> m_Void;
 	Texture* m_ScoreTxt;
 	Objects* m_Object;
+	Point2f m_MousPos;
+	
+
+	const float distanceFromBorder{ 100.f };
 
 	float m_Timer{};
+	float m_SecondTimer{};
 	int m_Cols{ 18 };
 	int m_Rows{ 10 };
 	bool m_UpKeyDown{ false };
 	bool m_DownKey{ false };
 	bool m_RighKey{ false };
 	bool m_LeftKey{ false };
-	std::string m_Score{ std::to_string(m_Timer) };
+	std::string m_Score{ };
+
+	const float cellWidth{ GetViewPort().width / m_Cols - distanceFromBorder / m_Cols };
+	const float cellHeight{ GetViewPort().height / m_Rows - distanceFromBorder / m_Rows };
+	Rectf m_SafeRect;
+	int m_Idx;
+	Vector2f m_Velocity;
 };
