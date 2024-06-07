@@ -36,6 +36,7 @@ private:
 	Player* m_pPlayer;
 	std::vector<bool> m_Void;
 	Texture* m_ScoreTxt;
+	Texture* m_ObjectCounter;
 	Objects* m_Object;
 	Point2f m_MousPos;
 	

@@ -20,6 +20,7 @@ void Game::Initialize( )
 	m_pPlayer = new Player(Point2f(GetViewPort().width / 2, GetViewPort().height / 2));
 	m_Score = std::to_string(000);
 	m_ScoreTxt = new Texture("SCORE: " + m_Score, "mine-sweeper.ttf", 20, Color4f{ 1.f, 0.f, 0.f, 1.f });
+	m_ObjectCounter = new Texture(std::to_string(m_pPlayer->GetNrOfObjects()), "mine-sweeper.ttf", 20, Color4f{ 1.f, 0.f, 0.f, 1.f });
 	int gridSize{ m_Rows * m_Cols};
 	for (int i = 0; i < gridSize; i++)
 	{
@@ -42,6 +43,8 @@ void Game::Cleanup( )
 	m_ScoreTxt = nullptr;
 	delete m_Object;
 	m_Object = nullptr;
+	delete m_ObjectCounter;
+	m_ObjectCounter = nullptr;
 }
 
 void Game::Update( float elapsedSec )
@@ -74,11 +77,6 @@ void Game::Update( float elapsedSec )
 		{
 			speed /= 1.5f;
 		}
-		/*else
-		{
-			m_Velocity.x = speed;
-			m_Velocity.y = speed;
-		}*/
 		if (m_UpKeyDown)
 		{
 			if (m_Velocity.y <= speed) m_Velocity.y += versnelling * elapsedSec;
@@ -93,7 +91,6 @@ void Game::Update( float elapsedSec )
 		if (m_DownKey)
 		{
 			if (m_Velocity.y >= -speed) m_Velocity.y -= versnelling * elapsedSec;
-			
 		}
 		else
 		{
@@ -154,7 +151,9 @@ void Game::Update( float elapsedSec )
 				m_Void[idx] = false;
 				m_pPlayer->IsCrafting();
 				delete m_ScoreTxt;
+				delete m_ObjectCounter;
 				m_ScoreTxt = nullptr;
+				m_ObjectCounter = new Texture(std::to_string(m_pPlayer->GetNrOfObjects()), "mine-sweeper.ttf", 20, Color4f{ 1.f, 0.f, 0.f, 1.f });
 				m_ScoreTxt = new Texture("SCORE: " + m_Score, "mine-sweeper.ttf", 20, Color4f{1.f, 0.f, 0.f, 1.f});
 			}
 		}
@@ -165,6 +164,8 @@ void Game::Update( float elapsedSec )
 		m_Object->CheckPickup(platform, m_pPlayer->GetPos(), cellWidth);
 		delete m_ScoreTxt;
 		m_ScoreTxt = nullptr;
+		delete m_ObjectCounter;
+		m_ObjectCounter = new Texture(std::to_string(m_pPlayer->GetNrOfObjects()), "mine-sweeper.ttf", 20, Color4f{ 1.f, 0.f, 0.f, 1.f });
 		m_ScoreTxt = new Texture("SCORE: " + m_Score, "mine-sweeper.ttf", 20, Color4f{1.f, 0.f, 0.f, 1.f});
 	}
 
@@ -185,6 +186,7 @@ void Game::Update( float elapsedSec )
 	{
 		m_pPlayer->GetPos().y = platform.bottom - platform.height / 2;
 	}
+	//std::cout << m_Velocity << std::endl;
 }
 
 void Game::Draw( ) const
@@ -244,6 +246,9 @@ void Game::Draw( ) const
 	utils::FillRect(GetViewPort().left, GetViewPort().height - platform.bottom, GetViewPort().width, platform.bottom);
 	utils::FillRect(GetViewPort().width - platform.left, GetViewPort().bottom, platform.left, GetViewPort().height);
 	if (m_ScoreTxt != nullptr) m_ScoreTxt->Draw(Point2f{ 10.5f, GetViewPort().height - m_ScoreTxt->GetHeight() });
+	if (m_ObjectCounter != nullptr) m_ObjectCounter->Draw(Point2f(GetViewPort().width - 45.5f, GetViewPort().height - m_ObjectCounter->GetHeight() - 3.f));
+	utils::SetColor(Color4f{ 0.f, 1.f, 0.f, 1.f });
+	utils::FillEllipse(Point2f(GetViewPort().width - 70.5f, GetViewPort().height - 18), (grid.width / 2) - 15.f, (grid.width / 2) - 15.f);
 }
 
 void Game::ProcessKeyDownEvent( const SDL_KeyboardEvent & e )

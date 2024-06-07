@@ -12,6 +12,7 @@ public:
 	bool CheckVoid(const Rectf& platform, const Rectf& theVoid, float girdwidth, bool isVoid);
 	bool CheckCrafting(const Rectf& platform, const Rectf& safeRect, float gridwidth);
 	void IsCrafting();
+	int GetNrOfObjects();
 private:
 	
 	Point2f m_Pos;

@@ -121,7 +121,12 @@ bool Player::CheckCrafting(const Rectf& platform, const Rectf& safeRect, float g
 
 void Player::IsCrafting()
 {
-	m_Objects -= 3;
+	m_Objects -= 5;
 	std::cout << m_Objects << std::endl;
 	m_Score += 10;
+}
+
+int Player::GetNrOfObjects()
+{
+	return m_Objects;
 }
